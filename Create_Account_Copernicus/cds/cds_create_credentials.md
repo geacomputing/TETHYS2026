@@ -47,7 +47,7 @@ key: YOUR-CDS-API-KEY
 
 Keep this file private; never add it to Git. The client can also read `ECMWF_DATASTORES_URL` and `ECMWF_DATASTORES_KEY` environment variables.
 
-> **Note:** CDS credentials are different from the credentials for Copernicus Marine. For Copernicus Marine instructions, see [marine_create_credentials.md](../../copernicusmarine/marine_create_credentials.md).
+> **Note:** CDS credentials are different from the credentials for Copernicus Marine. For Copernicus Marine instructions, see [marine_create_credentials.md](../copernicusmarine/marine_create_credentials.md).
 
 ## 4. Check access 
 
