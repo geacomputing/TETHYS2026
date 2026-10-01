@@ -28,13 +28,7 @@ map_projection = "orthographic"  # "planar" or "orthographic"
 
 
 # 1. LOAD A NETCDF FILE
-# Download Xarray's example dataset once and save it locally.
-filename = Path("air_temperature.nc")
-
-if not filename.exists():
-    xr.tutorial.load_dataset("air_temperature").to_netcdf(filename)
-
-ds = xr.open_dataset(filename)
+ds = xr.tutorial.load_dataset("air_temperature")
 
 
 # 2. INSPECT DATA AND METADATA
@@ -49,8 +43,9 @@ print("\nAIR VARIABLE METADATA")
 for name, value in ds["air"].attrs.items():
     print(f"{name}: {value}")
 
-print("\nSMALL DATA SAMPLE")
-print(ds["air"].isel(time=0, lat=slice(0, 3), lon=slice(0, 3)))
+if False:
+    print("\nSMALL DATA SAMPLE")
+    print(ds["air"].isel(time=0, lat=slice(0, 3), lon=slice(0, 3)))
 
 # Convert from Kelvin to Celsius.
 temperature = ds["air"] - 273.15

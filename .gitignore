@@ -3,4 +3,8 @@ __pycache__/
 *.py[cod]
 
 # Some test cases, quick and dirty, invisible to the public
+test-Scripts/*
+
+/test-Scripts/
+
 /test-Scripts/
