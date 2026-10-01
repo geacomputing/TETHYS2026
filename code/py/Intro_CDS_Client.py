@@ -33,17 +33,15 @@ while collections is not None:
     collections = collections.next
 
 print("\nCatalogue collections:")
-c= 1
-for collection_id in collection_ids:
-    print(f"{c}) {collection_id}")
-    c = c+1
+for number, collection_id in enumerate(collection_ids, start=1):
+    print(f"{number}) {collection_id}")
 
 
 # Select a collection and inspect its metadata.
 collection_id = "reanalysis-era5-pressure-levels"
-print(3*"\n")
-print(25*"-")
-print(2*"\n")
+print("\n" * 3)
+print("-" * 25)
+print("\n" * 2)
 print(f"Inspecting {collection_id}:")
 collection = client.get_collection(collection_id)
 
@@ -77,7 +75,7 @@ for attribute in attributes:
 DOWNLOAD_EXAMPLE = False
 
 if DOWNLOAD_EXAMPLE:
-    fileout= "era5_sample.nc"
+    fileout = "era5_sample.nc"
     request = {
         "product_type": ["reanalysis"],
         "variable": ["temperature"],
@@ -93,6 +91,6 @@ if DOWNLOAD_EXAMPLE:
     client.retrieve(
         collection_id,
         request,
-        target=fileout, # this is the output file
+        target=fileout,  # Save the downloaded NetCDF file here.
     )
     print(f"Downloaded: {fileout}")

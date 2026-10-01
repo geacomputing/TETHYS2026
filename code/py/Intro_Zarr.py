@@ -30,6 +30,12 @@ from ecmwf.datastores.config import get_config
 # This reads local configuration without making a network request.
 api_key = get_config("key")
 
+if not api_key:
+    raise RuntimeError(
+        "No CDS API key was found. Follow the CDS credential guide, then run "
+        "this script again."
+    )
+
 
 # 2. DEFINE THE ZARR ARCHIVES
 # Zarr stores arrays in chunks. The chunk layout affects how efficiently
@@ -57,41 +63,33 @@ selected_url = timechunked_url
 # consolidated=True reduces metadata requests.
 # The HTTP header authenticates access using the stored API key.
 # Opening the archive does not load all data variables into memory.
-ds = xr.open_zarr(
+with xr.open_zarr(
     selected_url,
     consolidated=True,
     storage_options={
         "headers": {"Authorization": f"Bearer {api_key}"}
     },
-)
+) as ds:
+    # 4. SELECT THE FINAL TIME STEP
+    # isel selects by position; -1 means the final entry in the time axis.
+    # This limits subsequent calculations to one time step.
+    # Selection remains lazy: values are fetched when needed.
+    latest = ds.isel(time=-1)
 
-# 4. SELECT THE FINAL TIME STEP
-# isel selects by position; -1 means the final entry in the time axis.
-# This limits subsequent calculations to one time step.
-# Selection remains lazy: values are fetched when needed.
-latest = ds.isel(time=-1)
+    # 5. INSPECT THE SELECTED DATASET
+    print("\nFINAL TIME COORDINATE")
+    print(latest["time"].values)
 
-# 5. INSPECT THE SELECTED DATASET
-print("\nFINAL TIME COORDINATE")
-print(latest["time"].values)
+    print("\nDATASET STRUCTURE")
+    print(latest)
 
-print("\nDATASET STRUCTURE")
-print(latest)
+    # To retrieve actual values, select a variable first, for example:
+    # temperature = latest["2m_temperature"].load()
 
-# To retrieve actual values, select a variable first, for example:
-# temperature = latest["2m_temperature"].load()
+    full_size = ds.nbytes
+    last_size = latest.nbytes
 
-# The context manager closes the dataset automatically.
-
-
-#Check sizes! 
-full_size = ds.nbytes
-last_size = ds.isel(time=-1).nbytes
-
-print()
-print(25*"-")
-print()
-print(f"(Full dataset:   {full_size / 10**12:.2f} TB)")
-print(f"Last time step: {last_size / 10**6:.2f} MB")
-
-print(ds.isel(time=-1).coords)
+    print("\n" + "-" * 25 + "\n")
+    print(f"Full dataset:   {full_size / 10**12:.2f} TB")
+    print(f"Last time step: {last_size / 10**6:.2f} MB")
+    print(latest.coords)

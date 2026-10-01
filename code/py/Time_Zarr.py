@@ -23,6 +23,12 @@ from ecmwf.datastores.config import get_config
 # 1. READ THE STORED API KEY
 api_key = get_config("key")
 
+if not api_key:
+    raise RuntimeError(
+        "No CDS API key was found. Follow the CDS credential guide, then run "
+        "this script again."
+    )
+
 storage_options = {
     "headers": {"Authorization": f"Bearer {api_key}"}
 }
@@ -45,7 +51,6 @@ archives = {
 # A fixed historical timestamp ensures both tests request identical data.
 variable = "d2m"
 timestamp = "2024-01-01T00:00:00"
-i, j = 1, 1
 
 results = []
 

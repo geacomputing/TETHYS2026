@@ -1,8 +1,16 @@
-# Python bytecode is generated locally and should not be committed.
+# Python and Jupyter files generated locally.
 __pycache__/
 *.py[cod]
+.ipynb_checkpoints/
 
-# Some test cases, quick and dirty, invisible to the public
-test-Scripts/*
+# Downloaded data can be regenerated from the lesson scripts.
+*.nc
+
+# Local experiments are not course materials.
 /test-Scripts/
 
+# Credentials and local environment files must stay private.
+.env
+.ecmwfdatastoresrc
+.copernicusmarine/
+.venv/

@@ -1,85 +1,102 @@
-# TETHYS 2026 — Hands-on Training
+# TETHYS 2026 — hands-on training
 
-Hands-on course for **TETHYS 2026**, held at the **University of Cyprus (UCY)**.
+Practical materials for exploring climate and ocean data with Python, xarray, Copernicus services, and a browser-based ERA5 map. The course is hosted by the University of Cyprus (UCY) and prepared by GEA Computing Ltd.
 
-The training uses Python and [xarray](https://xarray.dev/) to explore climate and ocean data: opening datasets, inspecting metadata, selecting data in space and time, aggregating and resampling, plotting results, and retrieving Copernicus data programmatically.
+## What you will learn
 
-## Repository structure
+- Work with xarray `Dataset` and `DataArray` objects.
+- Open NetCDF and remote Zarr data, inspect metadata, and select data by place and time.
+- Calculate spatial and temporal summaries, resample time series, and create climatologies.
+- Plot gridded data and time series with Matplotlib; optionally use Cartopy maps.
+- Access Copernicus Climate Data Store (CDS) and Copernicus Marine data safely.
+- See why a Zarr archive's chunk layout matters for map and time-series workloads.
 
-```text
-.
-├── code/
-│   ├── py/                         # Runnable Python scripts
-│   └── ipynb/                      # Equivalent Jupyter notebooks
-├── Create_Account_Copernicus/      # Copernicus account and credential starter kit
-│   ├── cds/                        # Climate Data Store (CDS) setup
-│   └── copernicusmarine/           # Copernicus Marine setup
-└── test-Scripts/                   # dev checks - untracked
-```
+## Setup and reproducibility
 
-- `code/` contains the course exercises and examples. Wherever possible, each lesson is provided in matching `.py` and `.ipynb` forms. Use the scripts locally or run the notebooks in Jupyter/Google Colab.
-- `Create_Account_Copernicus/` is the starter kit for creating and safely configuring the credentials needed during the course. It covers both the Copernicus Climate Data Store (CDS) API and Copernicus Marine Toolbox, including on-the-fly access to Zarr/ARCO data.
-- `test-Scripts/` contains lightweight scripts for checking credentials and experimentation; these are not the main teaching materials.
+Create the three course environments used for the lessons: `xarray`, `ecmwf-datastores-client`, and `copernicusMarine`. Follow the credential guides before running the CDS or Copernicus Marine lessons.
 
-All course code is Python unless a file explicitly says otherwise.
-
-## Learning topics
-
-- Core xarray data structures: `Dataset` and `DataArray`
-- NetCDF loading, metadata inspection, and coordinate-aware indexing
-- Spatial and temporal subsetting
-- Reductions, area-weighted averages, resampling, and grouped climatologies
-- Visualising gridded and time-series data with Matplotlib and optional Cartopy maps
-- Retrieving and opening Copernicus climate and marine data with APIs, including on-the-fly Zarr access
-
-## Getting started
-
-Clone or download this repository, then create and activate a Python environment:
+After creating them, record their installed dependencies with the provided script:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate             # Windows: .venv\Scripts\activate
-python -m pip install --upgrade pip
-python -m pip install xarray netCDF4 pooch numpy matplotlib jupyter
+bash create_envs.sh
 ```
 
-For optional map projections and coastlines, also install Cartopy:
+The script writes a pip requirements file and a Conda YAML export for each environment to [`environments/`](environments/README.md). The YAML files omit machine-specific `prefix` values and can be used to recreate an environment, for example:
 
 ```bash
-python -m pip install cartopy
+conda env create --file environments/yml_xarray.yml
 ```
 
-Run the introductory script:
+Run the introductory lesson:
 
 ```bash
 python code/py/Intro_xarray.py
 ```
 
-Or open the equivalent notebook:
+Or open any matching notebook:
 
 ```bash
-jupyter notebook code/ipynb/Intro_xarray.ipynb
+jupyter lab code/ipynb/Intro_xarray.ipynb
 ```
 
-The notebook can also be uploaded to and run from Google Colab. Install any missing dependencies in a first Colab cell as needed.
+## Course materials
+
+| Material | What it does | Why it matters |
+| --- | --- | --- |
+| `code/py/Intro_xarray.py` | Loads tutorial NetCDF data, subsets it, calculates statistics, resamples it, and plots results. | Builds the xarray workflow used in later exercises. |
+| `code/py/Intro_CDS_Client.py` | Authenticates to CDS, explores the catalogue, and optionally retrieves a small ERA5 sample. | Introduces reproducible, programmatic access to climate data. |
+| `code/py/Intro_Zarr.py` | Opens an authenticated ERA5 ARCO Zarr archive and inspects one time step. | Shows lazy remote access without downloading a whole archive. |
+| `code/py/Time_Zarr.py` | Compares the time- and geo-chunked ERA5 archives for one global map. | Demonstrates that choosing chunks to match the task improves performance. |
+| `code/ipynb/*.ipynb` | Notebook versions of every Python lesson, with matching filenames. | Supports an interactive Jupyter workflow; cells contain no credentials. |
+| `simple_web_page_zarr/TETHYS_ERA5_Map.html` | Interactive, browser-only map of ERA5 2 m air temperature. | Makes remote Zarr access and hourly data exploration visible without writing Python. |
+
+## Browser-based ERA5 map
+
+The standalone [ERA5 map](simple_web_page_zarr/TETHYS_ERA5_Map.html) loads a seven-day, hourly window of global 2 m air temperature. It uses ECMWF's **time-chunked** ERA5 ARCO Zarr archive, which is suited to maps covering large areas over a short time period.
+
+Serve the page locally, then open the displayed address in a current browser:
+
+```bash
+python -m http.server 8000 --directory simple_web_page_zarr
+```
+
+Open <http://localhost:8000/TETHYS_ERA5_Map.html>, enter a CDS API key, choose a UTC start date, and select **Load map**. Drag to pan, use the mouse wheel to zoom, and move the slider through the hourly maps.
+
+### How it works
+
+1. The page requests Zarr metadata and only the chunks needed for the chosen temperature map from ECMWF.
+2. It converts temperatures from Kelvin to °C, colours the grid, and draws it with bundled coastline geometry.
+3. Moving the slider requests another hourly slice; it does not download the complete ERA5 archive.
+
+This design exists to make the relationship between a data request and remote chunked storage tangible. It is a teaching demonstrator, not a general-purpose map service: network speed, ECMWF service load, browser support, and CDS permissions affect performance.
+
+### API-key safety
+
+The map sends the key directly to ECMWF as an authorization header and does not intentionally store it. Still, treat it as a password: use the page only from a trusted local copy, do not publish a page with a key prefilled, and never commit credentials, tokens, screenshots, or generated configuration files.
 
 ## Copernicus access
 
-Complete the relevant account setup before the data-retrieval exercises:
+Complete the applicable account setup before the retrieval exercises:
 
 - [CDS credentials and ECMWF Data Stores client](Create_Account_Copernicus/cds/cds_create_credentials.md)
 - [Copernicus Marine credentials and Toolbox](Create_Account_Copernicus/copernicusmarine/marine_create_credentials.md)
 
-CDS and Copernicus Marine are separate services: they require different credentials and client libraries. Keep all keys, tokens, passwords, and generated configuration files private; never commit them to Git or include them in screenshots.
+CDS and Copernicus Marine are separate services, with separate accounts, credentials, and course environments. Configure them locally using the guides above before running their lessons.
 
-## Requirements
+## Repository layout
 
-The introductory xarray material requires Python 3 and the packages listed in the setup section. Copernicus exercises additionally require the appropriate client:
-
-- CDS: `ecmwf-datastores-client`
-- Copernicus Marine: `copernicusmarine`
-
-Follow the credential guides above for installation and authentication details.
+```text
+.
+├── code/
+│   ├── py/                              # Runnable Python lessons
+│   └── ipynb/                           # Equivalent Jupyter notebooks
+├── environments/                        # Exports generated by create_envs.sh
+│   ├── requirements_<environment>.txt   # pip package snapshots
+│   └── yml_<environment>.yml            # Conda environment snapshots
+├── Create_Account_Copernicus/           # CDS and Marine authentication guides
+└── simple_web_page_zarr/
+    └── TETHYS_ERA5_Map.html             # Standalone browser demonstrator
+```
 
 ## License
 

@@ -12,8 +12,6 @@ Optional map support:
     pip install cartopy
 """
 
-from pathlib import Path
-
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -23,8 +21,8 @@ import matplotlib.pyplot as plt
 #   cartopy = False                  -> regular longitude/latitude plot
 #   cartopy = True, "planar"         -> flat map with coastlines
 #   cartopy = True, "orthographic"   -> globe view
-cartopy = True
-map_projection = "orthographic"  # "planar" or "orthographic"
+cartopy = False
+map_projection = "planar"  # "planar" or "orthographic"
 
 
 # 1. LOAD A NETCDF FILE
