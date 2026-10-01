@@ -1,0 +1,2 @@
+# TETHYS2026
+TETHYS Summer School 2026 
