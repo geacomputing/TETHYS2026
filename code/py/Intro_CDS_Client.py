@@ -74,7 +74,7 @@ for attribute in attributes:
 
 
 # Optional: set to True to request and download a small ERA5 sample.
-DOWNLOAD_EXAMPLE = True
+DOWNLOAD_EXAMPLE = False
 
 if DOWNLOAD_EXAMPLE:
     fileout= "era5_sample.nc"
