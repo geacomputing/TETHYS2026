@@ -14,3 +14,34 @@ __pycache__/
 .ecmwfdatastoresrc
 .copernicusmarine/
 .venv/
+
+
+
+# LaTeX compilation files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
+# Generated PDF
+*.pdf
+
+# Presentation working folders
+/presentation/images/
+/presentation/slides/
+/presentation/oldpresentation/
+
+# Temporary files
+*.tmp
+*.bak
+*~

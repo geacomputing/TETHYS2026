@@ -1,0 +1,98 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[light,condensed,math]{iwona}
+\usepackage{pdfpages}
+
+
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\usetheme{metropolis}
+\usefonttheme{professionalfonts}
+
+\definecolor{mybackground}{HTML}{333333}
+\definecolor{mytext}{HTML}{FFFFFF}
+\definecolor{myaccent}{HTML}{189AD3}
+
+\setbeamercolor{normal text}{fg=mytext,bg=mybackground}
+\setbeamercolor{background canvas}{bg=mybackground}
+\setbeamercolor{frametitle}{fg=mytext,bg=mybackground}
+\setbeamercolor{title separator}{fg=myaccent}
+
+% Remove EVERYTHING related to navigation/progress/footer
+\metroset{
+  progressbar=none,
+  numbering=none
+}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{progress bar in head/foot}{}
+\setbeamertemplate{progress bar in frametitle}{}
+\setbeamertemplate{progress bar in section page}{}
+
+
+
+% Square bullets in accent color
+\setbeamertemplate{itemize item}{%
+    \raisebox{0.15ex}{\color{myaccent}\rule{0.45em}{0.45em}}%
+}
+
+\setbeamertemplate{itemize subitem}{%
+    \raisebox{0.15ex}{\color{myaccent}\rule{0.35em}{0.35em}}%
+}
+
+\setbeamercolor{itemize item}{fg=myaccent}
+\setbeamercolor{itemize subitem}{fg=myaccent}
+
+
+
+
+
+\title{Handling Climate Data in Python}
+\subtitle{Some subtitle}
+\author{Marco Miani}
+\date{\today}
+\institute{Some insitute}
+
+
+
+% =========================================================
+% DOCUMENT
+% =========================================================
+\begin{document}
+
+
+% =========================================================
+% TITLE PAGE
+% =========================================================
+\maketitle
+
+
+% =========================================================
+% WELCOME
+% =========================================================
+\input{slides/welcome}
+
+
+% \includepdf[pages=3]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=4]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=5]{oldpresentation/Presentation.pdf}
+
+% \includepdf[pages=7]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=8]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=9]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=10]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=11]{oldpresentation/Presentation.pdf}
+% \includepdf[pages=12]{oldpresentation/Presentation.pdf}
+
+
+
+\input{slides/zarrVSnetcdf}
+
+\input{slides/API}
+\input{slides/API-images}
+% =========================================================
+\end{document}
